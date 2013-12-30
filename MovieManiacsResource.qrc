@@ -1,0 +1,15 @@
+<RCC>
+    <qresource prefix="/Images">
+        <file>film_add.png</file>
+        <file>film_edit.png</file>
+        <file>film.png</file>
+        <file>film_delete.png</file>
+        <file>film_link.png</file>
+        <file>film_save.png</file>
+        <file>film_new_collection.png</file>
+    </qresource>
+    <qresource prefix="/Icons">
+        <file>1373334447_88823.ico</file>
+        <file>film.ico</file>
+    </qresource>
+</RCC>
