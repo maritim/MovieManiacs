@@ -4,10 +4,13 @@
 #include "diskwriter.h"
 #include "movieform.h"
 #include "newmoviedialog.h"
+#include "moviedownloader.h"
+#include "movie.h"
 
 #include <QtXml>
 #include <QMessageBox>
 #include <QFileDialog>
+#include <QProgressBar>
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
@@ -20,7 +23,7 @@ MainWindow::MainWindow(QWidget *parent) :
         collectionFile = "example.xml";
         loadMovieList(collectionFile);
         loadMovieListWidget(movieList);
-        ui->listWidget->setCurrentItem(ui->listWidget->item(0));
+        ui->movieListWidget->setCurrentItem(ui->movieListWidget->item(0));
     }
     catch(char *error)
     {
@@ -88,8 +91,8 @@ void MainWindow::loadMovieList(QString filename)
 
 void MainWindow::loadMovieListWidget(const QList<movie>& movieList)
 {
-    ui->listWidget->clear();
-    ui->listWidget->setIconSize(QSize(50,40));
+    ui->movieListWidget->clear();
+    ui->movieListWidget->setIconSize(QSize(50,40));
 
     for(int i=0;i<movieList.count();i++)
     {
@@ -98,7 +101,7 @@ void MainWindow::loadMovieListWidget(const QList<movie>& movieList)
         //ui->tableWidget->setItem(i,1,widget);
         //ui->tableWidget->setItem(i,0,new QTableWidgetItem(QIcon("1373337397_movie_add.png"),""));
         //ui->tableWidget->setItem(i,1,new QTableWidgetItem(movieList[i].getXMLPath()));
-//        QListWidgetItem *item = new QListWidgetItem(movieList[i].getName());
+//        QmovieListWidgetItem *item = new QmovieListWidgetItem(movieList[i].getName());
 //        item->setSizeHint(QSize(200,64));
       //  QImage *image = new QImage("thegodfather.jpg");
 //        QIcon icon(QPixmap(movieList[i].getPosterPath()));
@@ -107,10 +110,10 @@ void MainWindow::loadMovieListWidget(const QList<movie>& movieList)
         //QFile
 //        item->setIcon(icon);
 
-//        ui->listWidget->addItem(item);
+//        ui->movieListWidget->addItem(item);
         //QSize size = new QSize(100,100);
         //QIcon *icon = new QIcon("thegodfather.jpg");
-        //ui->listWidget->item(i)->setIcon(QIcon("thegodfather.jpg"));
+        //ui->movieListWidget->item(i)->setIcon(QIcon("thegodfather.jpg"));
 
         addMovieToListWidget(movieList[i]);
     }
@@ -123,11 +126,16 @@ void MainWindow::addMovieToListWidget(const movie& mov)
     QIcon icon(QPixmap(mov.getPosterPath()));
     item->setIcon(icon);
 
-    ui->listWidget->addItem(item);
+    ui->movieListWidget->addItem(item);
 }
 
-void MainWindow::on_listWidget_itemClicked(QListWidgetItem *item)
+int MainWindow::getIndexByName(const QString& movieName)
 {
+    for(int i=0;i<movieList.size();i++)
+        if(movieList[i].getName() == movieName)
+            return i;
+
+    throw "Don't find any movie with name " + movieName + " !";
 }
 
 movie MainWindow::getMovieByName(const QString& movieName)
@@ -139,7 +147,7 @@ movie MainWindow::getMovieByName(const QString& movieName)
     throw "Don't find any movie with name " + movieName + " !";
 }
 
-void MainWindow::on_listWidget_itemDoubleClicked(QListWidgetItem *item)
+void MainWindow::on_movieListWidget_itemDoubleClicked(QListWidgetItem *item)
 {
     movieform *movForm = new movieform(this);
 
@@ -160,11 +168,11 @@ void MainWindow::on_actionThumbnails_changed()
 {
     if(ui->actionThumbnails->isChecked())
     {
-        ui->listWidget->setIconSize(QSize(50,40));
+        ui->movieListWidget->setIconSize(QSize(50,40));
     }
     else
     {
-        ui->listWidget->setIconSize(QSize(0,0));
+        ui->movieListWidget->setIconSize(QSize(0,0));
     }
 }
 
@@ -180,17 +188,17 @@ void MainWindow::on_actionSave_Collection_triggered()
 
 void MainWindow::on_actionDelete_Movie_triggered()
 {
-    for(int i=0;i<ui->listWidget->count();i++)
-        if(ui->listWidget->item(i)->isSelected())
+    for(int i=0;i<ui->movieListWidget->count();i++)
+        if(ui->movieListWidget->item(i)->isSelected())
         {
             for(int j=0;j<movieList.count();j++)
-                if(ui->listWidget->item(i)->text() == movieList[j].getName())
+                if(ui->movieListWidget->item(i)->text() == movieList[j].getName())
                 {
                     movieList.removeAt(j);
                     break ;
                 }
 
-            ui->listWidget->takeItem(i);
+            ui->movieListWidget->takeItem(i);
         }
 }
 
@@ -231,5 +239,59 @@ void MainWindow::on_actionSave_As_triggered()
 
 void MainWindow::on_actionUpdate_Movie_triggered()
 {
-    if()
+    //QProgressBar *progressBar = new QProgressBar(ui->statusBar);
+    //progressBar->setMaximumSize(170,19);
+    //ui->statusBar->addWidget(progressBar);
+
+    QString selectedMovieName = ui->movieListWidget->selectedItems().at(0)->text();
+
+    try {
+
+        int selectedIndex = getIndexByName(selectedMovieName);
+
+        if(getMovieByName(selectedMovieName).getrtid().size() == 0) {
+
+            QMessageBox::information(this,"Error","Could not update " + selectedMovieName + " without specific ID");
+
+            return ;
+        }
+
+        movieDownloader *movDownloader = new movieDownloader(movieList.at(selectedIndex).getrtid());
+
+        QThread *thread = new QThread();
+        movDownloader->moveToThread(thread);
+        QObject::connect(movDownloader, SIGNAL(finished(movie*)), this, SLOT(updateMovie(movie*)));
+        QObject::connect(thread, SIGNAL(started()), movDownloader, SLOT(run()), Qt::DirectConnection);
+        QObject::connect(movDownloader, SIGNAL(finished()),thread, SLOT(quit()), Qt::DirectConnection);
+        QObject::connect(movDownloader, SIGNAL(progress(int)), this, SLOT(progressUpdate(int)));
+
+        thread->start();
+
+        //ui->statusBar->showMessage("Downloading...");
+    }
+    catch(...) {
+    }
 }
+
+void MainWindow::updateMovie(movie* mov)
+{
+    ui->statusBar->clearMessage();
+    ui->statusBar->showMessage("Finished update: " + mov->getOriginalName());
+
+    QIcon icon(QPixmap(mov->getPosterPath()));
+
+    for(int i=0;i<movieList.size();i++)
+        if(movieList.at(i).getrtid() == mov->getrtid()) {
+
+            movieList[i].updateDBInformations(mov);
+
+            ui->movieListWidget->item(i)->setIcon(icon);
+        }
+}
+
+void MainWindow::progressUpdate(int progressVal)
+{
+    ui->statusBar->clearMessage();
+    ui->statusBar->showMessage("Progress: " + QString::number(progressVal) + "%");
+}
+

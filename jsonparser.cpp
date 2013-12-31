@@ -116,9 +116,9 @@ QString jSonParser::getSet(void) {
         result += jSonString[pos];
 
         if(Stack.empty()) {
-            ++ pos;
+            ++ pos ;
 
-            return result.trimmed();
+            return trimQuoteMarks(result);
         }
     }
 
@@ -152,7 +152,7 @@ std::vector<QString> jSonParser::jSonVectorOfElementsParsed(void) {
 
     std::vector<QString> jSon;
 
-    for(pos=0;pos < jSonString.size()-1;) {
+    for(pos=1;pos < jSonString.size()-1;) {
         jSon.push_back(getSetArgument());
     }
 

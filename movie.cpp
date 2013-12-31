@@ -47,6 +47,9 @@ void movie::getRealInfosXML(QDomElement realinfos)
     QDomNode ratingIngo = realinfos.elementsByTagName("rating").at(0);
     setRating(ratingIngo.toElement().text());
 
+    QDomNode rtidinfo = realinfos.elementsByTagName("rtid").at(0);
+    setrtid(rtidinfo.toElement().text());
+
     QDomNode yearinfo = realinfos.elementsByTagName("year").at(0);
     setYear(yearinfo.toElement().text().toInt());
 
@@ -261,5 +264,21 @@ QString movie::getrtid(void) const {
     return rtid;
 }
 
+void movie::updateDBInformations(movie *mov) {
 
+    originalName = mov->getOriginalName();
+    posterPath = mov->getPosterPath();
+    year = mov->getYear();
+    synopsis = mov->getSynopsis();
+
+    genres.clear();
+
+    for(int i=0;i<mov->genres.count();i++)
+        genres.push_back(mov->genres[i]);
+
+    cast.clear();
+
+    for(int i=0;i<mov->cast.count();i++)
+        cast.push_back(mov->cast[i]);
+}
 

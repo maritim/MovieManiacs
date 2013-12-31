@@ -48,6 +48,7 @@ void diskwriter::XMLRealInfosWriter(QTextStream& fileStream, const movie& mov)
 
     fileStream << "\t\t\t<name>" + mov.getOriginalName() + "</name>\n";
     fileStream << "\t\t\t<year>" + QString::number(mov.getYear()) + "</year>\n";
+    fileStream << "\t\t\t<rtid>" + mov.getrtid() + "</rtid>\n";
     fileStream << "\t\t\t<rating>" + mov.getRating() + "</rating>\n";
     fileStream << "\t\t\t<poster>" + mov.getPosterPath() + "</poster>\n";
     fileStream << "\t\t\t<director>" + mov.getDirector() + "</director>\n";

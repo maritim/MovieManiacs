@@ -26,11 +26,11 @@ public:
     void loadMovieListWidget(const QList<movie>&);
     void addMovieToListWidget(const movie&);
     movie getMovieByName(const QString&);
+    int getIndexByName(const QString&);
 
 private slots:
     void on_actionNew_Window_triggered();
-    void on_listWidget_itemClicked(QListWidgetItem *item);
-    void on_listWidget_itemDoubleClicked(QListWidgetItem *item);
+    void on_movieListWidget_itemDoubleClicked(QListWidgetItem *item);
     void on_actionToolbar_changed();
     void on_actionThumbnails_changed();
     void on_actionExit_triggered();
@@ -39,6 +39,10 @@ private slots:
     void on_actionOpen_Collection_triggered();
     void on_actionNew_Collection_triggered();
     void on_actionSave_As_triggered();
+    void on_actionUpdate_Movie_triggered();
+
+    void updateMovie(movie*);
+    void progressUpdate(int);
 
 private:
     Ui::MainWindow *ui;

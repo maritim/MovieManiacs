@@ -2,7 +2,7 @@
 
 #include <QtCore>
 #include <QtXml>
-\
+
 #ifndef MOVIE_H
 #define MOVIE_H
 
@@ -77,6 +77,10 @@ public:
     void getRealInfosXML(QDomElement);
     void getGenresXML(QDomElement);
     void getCastXML(QDomElement);
+
+    void updateDBInformations(movie*);
+    //void setpid(const QString&);
+    //QString getpi(void) const;
 
     //movie operator=(const movie&);
 };

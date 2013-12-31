@@ -17,10 +17,6 @@ networkclass::~networkclass()
 {
 }
 
-networkclass::networkclass(const networkclass&)
-{
-}
-
 void networkclass::getSourceCode(QString urlString)
 {
     QNetworkAccessManager *nam;
@@ -29,7 +25,7 @@ void networkclass::getSourceCode(QString urlString)
                 this, SLOT(finishedSlot(QNetworkReply*)));
 
     QUrl url(urlString);
-    QNetworkReply* reply = nam->get(QNetworkRequest(url));
+    nam->get(QNetworkRequest(url));
 }
 
 void networkclass::getInternetImage(QString urlString)
@@ -72,7 +68,7 @@ void networkclass::finishedSlot(QNetworkReply* reply)
 
             // Example 2: Reading bytes form the reply
             //QByteArray bytes = reply->readAll();  // bytes
-            qDebug() << "Waw";
+            //qDebug() << "Waw";
             QByteArray rawData = reply->readAll();
             QString textData(rawData);
             //qDebug() << textData;
@@ -104,7 +100,7 @@ void networkclass::finishedImageSlot(QNetworkReply* reply)
             QImage pic;
             pic.loadFromData(jpegData);
 
-            qDebug() << "dsadas";
+            //qDebug() << "dsadas";
             emit finished(pic);
         }
     }

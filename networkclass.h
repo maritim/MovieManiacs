@@ -18,7 +18,6 @@ private:
 
 public:
     networkclass();
-    networkclass(const networkclass&);
     ~networkclass();
 
 public:

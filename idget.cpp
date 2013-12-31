@@ -36,7 +36,7 @@ void IDGet::fillMoviesList(QString jSon)
     std::vector<QString> vresult = jSonParse.jSonVectorOfSetsParsed();
 
     try {
-        for(int i=0;i<vresult.size();i++)
+        for(unsigned int i=0;i<vresult.size();i++)
         {
             //qDebug() << jSons.at(i);
             partialMovieDownloader *threadChild = new partialMovieDownloader(vresult[i]);
