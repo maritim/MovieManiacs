@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>434</width>
-    <height>371</height>
+    <width>437</width>
+    <height>405</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -15,7 +15,7 @@
   </property>
   <property name="windowIcon">
    <iconset resource="MovieManiacsResource.qrc">
-    <normaloff>:/Icons/film.ico</normaloff>:/Icons/film.ico</iconset>
+    <normaloff>:/icons/film.ico</normaloff>:/icons/film.ico</iconset>
   </property>
   <layout class="QVBoxLayout" name="verticalLayout">
    <item>
@@ -30,6 +30,9 @@
       <layout class="QHBoxLayout" name="horizontalLayout">
        <item>
         <layout class="QFormLayout" name="formLayout_2">
+         <property name="fieldGrowthPolicy">
+          <enum>QFormLayout::AllNonFixedFieldsGrow</enum>
+         </property>
          <item row="1" column="0" colspan="2">
           <widget class="QGroupBox" name="groupBox_3">
            <property name="title">
@@ -47,34 +50,6 @@
               <property name="verticalSpacing">
                <number>8</number>
               </property>
-              <item row="1" column="0">
-               <widget class="QLabel" name="yearTextLabel">
-                <property name="text">
-                 <string>Year:</string>
-                </property>
-               </widget>
-              </item>
-              <item row="1" column="1">
-               <widget class="QLabel" name="yearInfoLabel">
-                <property name="text">
-                 <string>aaa</string>
-                </property>
-               </widget>
-              </item>
-              <item row="2" column="0">
-               <widget class="QLabel" name="runtimeTextLabel">
-                <property name="text">
-                 <string>Runtime:</string>
-                </property>
-               </widget>
-              </item>
-              <item row="2" column="1">
-               <widget class="QLabel" name="runtimeInfoLabel">
-                <property name="text">
-                 <string>aaa</string>
-                </property>
-               </widget>
-              </item>
               <item row="0" column="0">
                <widget class="QLabel" name="originalNameTextLabel">
                 <property name="maximumSize">
@@ -125,6 +100,34 @@
                 </property>
                </widget>
               </item>
+              <item row="1" column="0">
+               <widget class="QLabel" name="yearTextLabel">
+                <property name="text">
+                 <string>Year:</string>
+                </property>
+               </widget>
+              </item>
+              <item row="1" column="1">
+               <widget class="QLabel" name="yearInfoLabel">
+                <property name="text">
+                 <string>aaa</string>
+                </property>
+               </widget>
+              </item>
+              <item row="2" column="0">
+               <widget class="QLabel" name="runtimeTextLabel">
+                <property name="text">
+                 <string>Runtime:</string>
+                </property>
+               </widget>
+              </item>
+              <item row="2" column="1">
+               <widget class="QLabel" name="runtimeInfoLabel">
+                <property name="text">
+                 <string>aaa</string>
+                </property>
+               </widget>
+              </item>
               <item row="3" column="0">
                <widget class="QLabel" name="ratingTextLabel">
                 <property name="text">
@@ -140,13 +143,27 @@
                </widget>
               </item>
               <item row="4" column="0">
+               <widget class="QLabel" name="directorsTextLabel">
+                <property name="text">
+                 <string>Directors:</string>
+                </property>
+               </widget>
+              </item>
+              <item row="4" column="1">
+               <widget class="QLabel" name="directorsInfoLabel">
+                <property name="text">
+                 <string>aaa</string>
+                </property>
+               </widget>
+              </item>
+              <item row="5" column="0">
                <widget class="QLabel" name="genresTextLabel">
                 <property name="text">
                  <string>Genres:</string>
                 </property>
                </widget>
               </item>
-              <item row="4" column="1">
+              <item row="5" column="1">
                <widget class="QLabel" name="genresInfoLabel">
                 <property name="text">
                  <string>aaa</string>
@@ -271,13 +288,6 @@
          <property name="fieldGrowthPolicy">
           <enum>QFormLayout::AllNonFixedFieldsGrow</enum>
          </property>
-         <item row="0" column="1">
-          <widget class="QLabel" name="posterLabel">
-           <property name="text">
-            <string>&quot;&lt;img src='images/titanic.jpg' /&gt;&quot;</string>
-           </property>
-          </widget>
-         </item>
          <item row="0" column="0">
           <widget class="QLabel" name="label_3">
            <property name="text">
@@ -285,9 +295,22 @@
            </property>
           </widget>
          </item>
+         <item row="0" column="1">
+          <widget class="QLabel" name="posterLabel">
+           <property name="text">
+            <string>&quot;&lt;img src='images/titanic.jpg' /&gt;&quot;</string>
+           </property>
+           <property name="alignment">
+            <set>Qt::AlignCenter</set>
+           </property>
+          </widget>
+         </item>
         </layout>
        </item>
       </layout>
+      <zorder>groupBox</zorder>
+      <zorder></zorder>
+      <zorder>label_3</zorder>
      </widget>
      <widget class="QWidget" name="tab_2">
       <attribute name="title">
@@ -302,11 +325,17 @@
          <property name="autoScroll">
           <bool>true</bool>
          </property>
+         <property name="editTriggers">
+          <set>QAbstractItemView::NoEditTriggers</set>
+         </property>
          <property name="defaultDropAction">
           <enum>Qt::IgnoreAction</enum>
          </property>
          <property name="alternatingRowColors">
           <bool>true</bool>
+         </property>
+         <property name="selectionBehavior">
+          <enum>QAbstractItemView::SelectRows</enum>
          </property>
          <property name="sortingEnabled">
           <bool>true</bool>
@@ -345,6 +374,9 @@
        <string>Review</string>
       </attribute>
       <layout class="QFormLayout" name="formLayout_5">
+       <property name="fieldGrowthPolicy">
+        <enum>QFormLayout::AllNonFixedFieldsGrow</enum>
+       </property>
        <item row="0" column="0" colspan="2">
         <widget class="QGroupBox" name="groupBox_5">
          <property name="title">
@@ -395,6 +427,9 @@
     </widget>
    </item>
   </layout>
+  <zorder>tabWidget</zorder>
+  <zorder>buttonBox</zorder>
+  <zorder></zorder>
  </widget>
  <resources>
   <include location="MovieManiacsResource.qrc"/>

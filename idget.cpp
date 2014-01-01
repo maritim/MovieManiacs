@@ -27,13 +27,13 @@ IDGet::~IDGet()
 
 void IDGet::fillMoviesList(QString jSon)
 {
-    jSonParser jSonParse(this,jSon);
-    std::map<QString,QString> result = jSonParse.jSonParsed();
+    jSonParser jSonParse(jSon);
+    std::map<QString,QString> result = jSonParse.jSonSetParsed();
 
     //qDebug() << result["movies"];
 
     jSonParse.setString(result["movies"]);
-    std::vector<QString> vresult = jSonParse.jSonVectorOfSetsParsed();
+    std::vector<QString> vresult = jSonParse.jSonArrayParsed();
 
     try {
         for(unsigned int i=0;i<vresult.size();i++)

@@ -15,7 +15,7 @@
   </property>
   <property name="windowIcon">
    <iconset resource="MovieManiacsResource.qrc">
-    <normaloff>:/Icons/film.ico</normaloff>:/Icons/film.ico</iconset>
+    <normaloff>:/icons/film.ico</normaloff>:/icons/film.ico</iconset>
   </property>
   <layout class="QVBoxLayout" name="verticalLayout_2">
    <item>

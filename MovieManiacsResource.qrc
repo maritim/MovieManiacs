@@ -1,5 +1,5 @@
 <RCC>
-    <qresource prefix="/Images">
+    <qresource prefix="/images">
         <file>film_add.png</file>
         <file>film_edit.png</file>
         <file>film.png</file>
@@ -7,9 +7,12 @@
         <file>film_link.png</file>
         <file>film_save.png</file>
         <file>film_new_collection.png</file>
+        <file>film_go.png</file>
+        <file>film_error.png</file>
+        <file>inbox_film.png</file>
+        <file>folder_open_film.png</file>
     </qresource>
-    <qresource prefix="/Icons">
-        <file>1373334447_88823.ico</file>
+    <qresource prefix="/icons">
         <file>film.ico</file>
     </qresource>
 </RCC>

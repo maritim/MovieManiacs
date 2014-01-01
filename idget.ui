@@ -13,6 +13,10 @@
   <property name="windowTitle">
    <string>Dialog</string>
   </property>
+  <property name="windowIcon">
+   <iconset resource="MovieManiacsResource.qrc">
+    <normaloff>:/icons/film.ico</normaloff>:/icons/film.ico</iconset>
+  </property>
   <layout class="QVBoxLayout" name="verticalLayout_2">
    <item>
     <layout class="QVBoxLayout" name="verticalLayout">
@@ -54,7 +58,9 @@
    </item>
   </layout>
  </widget>
- <resources/>
+ <resources>
+  <include location="MovieManiacsResource.qrc"/>
+ </resources>
  <connections>
   <connection>
    <sender>buttonBox</sender>

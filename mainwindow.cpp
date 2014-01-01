@@ -6,6 +6,7 @@
 #include "newmoviedialog.h"
 #include "moviedownloader.h"
 #include "movie.h"
+#include "messagebox.h"
 
 #include <QtXml>
 #include <QMessageBox>
@@ -67,7 +68,20 @@ void MainWindow::loadMovieList(QString filename)
     {
         if(!document.setContent(&file))
         {
-            QMessageBox::information(this,"Error","Could not load the xml!");
+            //QPixmap pixmap();
+            //pixmap.load(":/images/film_error.png");
+
+            MessageBox::ErrorMessageBox("Error","Could not load \"" + filename + "\" !");
+/*            QMessageBox *box = new QMessageBox();
+            box->setIconPixmap(QPixmap(":/images/film_error.png"));
+            box->setWindowTitle("Error");
+            box->setText();
+            box->setStandardButtons(QMessageBox::Ok);
+            box->setDefaultButton(QMessageBox::Ok);
+            box->setModal(true);
+            box->show();
+*/
+            //QMessageBox::information(this,"Error","Could not load the xml!");
             return ;
         }
         file.close();
@@ -263,7 +277,7 @@ void MainWindow::on_actionUpdate_Movie_triggered()
         QObject::connect(movDownloader, SIGNAL(finished(movie*)), this, SLOT(updateMovie(movie*)));
         QObject::connect(thread, SIGNAL(started()), movDownloader, SLOT(run()), Qt::DirectConnection);
         QObject::connect(movDownloader, SIGNAL(finished()),thread, SLOT(quit()), Qt::DirectConnection);
-        QObject::connect(movDownloader, SIGNAL(progress(int)), this, SLOT(progressUpdate(int)));
+        QObject::connect(movDownloader, SIGNAL(progress(QString)), this, SLOT(progressUpdate(QString)));
 
         thread->start();
 
@@ -289,9 +303,9 @@ void MainWindow::updateMovie(movie* mov)
         }
 }
 
-void MainWindow::progressUpdate(int progressVal)
+void MainWindow::progressUpdate(QString progressInformations)
 {
     ui->statusBar->clearMessage();
-    ui->statusBar->showMessage("Progress: " + QString::number(progressVal) + "%");
+    ui->statusBar->showMessage("Progress: " + progressInformations);
 }
 

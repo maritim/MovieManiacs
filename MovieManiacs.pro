@@ -25,7 +25,8 @@ SOURCES += main.cpp\
     samplemovie.cpp \
     partialmoviedownloader.cpp \
     moviedownloader.cpp \
-    jsonparser.cpp
+    jsonparser.cpp \
+    messagebox.cpp
 
 HEADERS  += mainwindow.h \
     movie.h \
@@ -41,7 +42,8 @@ HEADERS  += mainwindow.h \
     MOC_DIR \
     moviedownloader.h \
     jsonparser.h \
-    moc_partialmoviedownloader.h
+    moc_partialmoviedownloader.h \
+    messagebox.h
 
 FORMS    += mainwindow.ui \
     simpledialog.ui \

@@ -18,13 +18,13 @@ private:
     QString getSetArgument(void);
     QString getSet(void);
     QString trimQuoteMarks(const QString &);
+    QString getArrayArgument(void);
 
 public:
-    explicit jSonParser(QObject *parent = 0, QString jSonString = "");
+    jSonParser(QString jSonString = 0);
     bool jSonValidityChecker(void);
-    std::map<QString,QString> jSonParsed(void);
-    std::vector<QString> jSonVectorOfSetsParsed(void);
-    std::vector<QString> jSonVectorOfElementsParsed(void);
+    std::map<QString,QString> jSonSetParsed(void);
+    std::vector<QString> jSonArrayParsed(void);
 
     void setString(QString);
 };

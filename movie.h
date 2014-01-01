@@ -16,9 +16,16 @@ protected:
     int year;
     QDateTime userDate;
     QString rating,originalName;
-    QString director,synopsis,runtime;
-    QList<QString> genres;
+    QString synopsis,runtime;
+    QList<QString> genres,directors;
     QList<actor> cast;
+
+private:
+    void getUserInfosXML(QDomElement);
+    void getRealInfosXML(QDomElement);
+    void getGenresXML(QDomElement);
+    void getDirectorsXML(QDomElement);
+    void getCastXML(QDomElement);
 
 public:
     movie();
@@ -50,9 +57,6 @@ public:
     void setOriginalName(const QString&);
     QString getOriginalName(void) const;
 
-    void setDirector(const QString&);
-    QString getDirector(void) const;
-
     void setRuntime(const QString&);
     QString getRuntime(void) const;
 
@@ -67,16 +71,19 @@ public:
     int genreCount(void) const;
     void removeGenre(const int&);
     void removeGenre(const QString&);
+    QList<QString> getGenres(void) const;
+
+    void addDirector(const QString&);
+    QString directorAt(const int&) const;
+    int directorsCount(void) const;
+    void removeDirector(const int&);
+    void removeDirector(const QString&);
+    QList<QString> getDirectors(void) const;
 
     void addActor(const actor&);
     actor actorAt(const int&) const;
     int actorCount(void) const;
     void removeActor(const int&);
-
-    void getUserInfosXML(QDomElement);
-    void getRealInfosXML(QDomElement);
-    void getGenresXML(QDomElement);
-    void getCastXML(QDomElement);
 
     void updateDBInformations(movie*);
     //void setpid(const QString&);

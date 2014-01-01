@@ -20,7 +20,7 @@ public:
 signals:
     void finished();
     void finished(movie*);
-    void progress(int);
+    void progress(QString);
     
 public slots:
     void run();

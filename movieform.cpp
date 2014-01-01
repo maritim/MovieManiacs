@@ -25,12 +25,11 @@ void movieform::getReady(void)
 {
     this->setWindowTitle(this->mov.getName() + " Details");
 
+    ui->tabWidget->setCurrentIndex(0);
     ui->tabWidget->setFocus();
 
     ui->label->setText(mov.getName());
     ui->yearInfoLabel->setText(QString::number(mov.getYear()));
-
-    //QPixmap poster("<img src='images/titanic.jpg' />");
 
     ui->userRatingInfoLabel->setText(mov.getUserRating());
     ui->dateInfoLabel->setText(QString::number(mov.getUserDate().date().day())
@@ -57,10 +56,17 @@ void movieform::getReady(void)
         if(mov.genreCount() == 1)
             ui->genresTextLabel->setText("Genre:");
         for(int i=1;i<mov.genreCount();i++)
-            ui->genresInfoLabel->setText(ui->genresInfoLabel->text() + " | " + mov.genreAt(i));
-        //ui->genresInfoComboBox->addItem(mov.genreAt(i));
+            ui->genresInfoLabel->setText(ui->genresInfoLabel->text() + " | \n" + mov.genreAt(i));
     }
-    //ui->label_3->setPixmap(QPixmap(mov.getPosterPath(), 0, Qt::AutoColor));
+
+    if(mov.directorsCount() >= 1)
+    {
+        ui->directorsInfoLabel->setText(mov.directorAt(0));
+        if(mov.directorsCount() == 1)
+            ui->directorsTextLabel->setText("Director:");
+        for(int i=1;i<mov.directorsCount();i++)
+            ui->directorsInfoLabel->setText(ui->directorsInfoLabel->text() + " | \n" + mov.directorAt(i));
+    }
 
     ui->posterLabel->setText("<img width=180 heigth=268 src='" + mov.getPosterPath() + "' />");
 
@@ -85,5 +91,5 @@ void movieform::loadCastTableWidget(const movie& mov)
 
 void movieform::on_buttonBox_accepted()
 {
-
+    this->close();
 }

@@ -59,7 +59,7 @@ void movie::getRealInfosXML(QDomElement realinfos)
     QDomNode synopsisinfo = realinfos.elementsByTagName("synopsis").at(0);
     setSynopsis(synopsisinfo.toElement().text());
 
-    QDomNode directorinfo = realinfos.elementsByTagName("director").at(0);
+    //QDomNode directorinfo = realinfos.elementsByTagName("director").at(0);
     //setDirector(directorinfo.toElement().text());
 
     //qDebug() << getDirector();
@@ -71,6 +71,10 @@ void movie::getRealInfosXML(QDomElement realinfos)
     if(genreInfos.isElement())
         getGenresXML(genreInfos.toElement());
 
+    QDomNode directorsInfos = realinfos.elementsByTagName("directors").at(0);
+    if(directorsInfos.isElement())
+        getDirectorsXML(directorsInfos.toElement());
+
     QDomNode castinfo = realinfos.elementsByTagName("cast").at(0);
     if(castinfo.isElement())
         getCastXML(castinfo.toElement());
@@ -80,13 +84,24 @@ void movie::getGenresXML(QDomElement genreInfos)
 {
     QDomNodeList genresinfo = genreInfos.elementsByTagName("genre");
 
-    for(int i=0;i<genresinfo.count();i++)
-    {
+    for(int i=0;i<genresinfo.count();i++) {
+
         QDomNode genreinfo = genresinfo.at(i);
-        if(genreinfo.isElement())
-        {
+        if(genreinfo.isElement()) {
             addGenre(genreinfo.toElement().text());
-            //qDebug() << genreinfo.toElement().text();
+        }
+    }
+}
+
+void movie::getDirectorsXML(QDomElement directorsInfos)
+{
+    QDomNodeList directorsInfo = directorsInfos.elementsByTagName("director");
+
+    for(int i=0;i<directorsInfo.count();i++) {
+
+        QDomNode directorInfo = directorsInfo.at(i);
+        if(directorInfo.isElement()) {
+            addDirector(directorInfo.toElement().text());
         }
     }
 }
@@ -177,14 +192,6 @@ QString movie::getRating(void) const {
     return rating;
 }
 
-void movie::setDirector(const QString& director) {
-    this->director = director;
-}
-
-QString movie::getDirector(void) const {
-    return director;
-}
-
 void movie::setSynopsis(const QString& synopsis) {
     this->synopsis = synopsis;
 }
@@ -224,14 +231,55 @@ void movie::removeGenre(const int& position) {
 }
 
 void movie::removeGenre(const QString& genre) {
-    int position = 0;
+    int position = -1;
     for(;position < genres.count();position ++)
-        if(genres[position] == genre)
-        {
+        if(genres[position] == genre) {
             break ;
         }
 
-    removeGenre(position);
+    if(position >= 0)
+        removeGenre(position);
+}
+
+QList<QString> movie::getGenres(void) const {
+    return this->genres;
+}
+
+void movie::addDirector(const QString& directorName) {
+    directors.push_back(directorName);
+}
+
+int movie::directorsCount(void) const {
+    return directors.count();
+}
+
+QString movie::directorAt(const int& position) const {
+    if(directors.count() <= position)
+        throw "Directors list limits exceeded!";
+
+    return directors[position];
+}
+
+void movie::removeDirector(const int& position) {
+    if(directors.count() <= position)
+        throw "Directors list limits esceeded!";
+
+    directors.removeAt(position);
+}
+
+void movie::removeDirector(const QString& directorName) {
+    int position = -1;
+    for(;position < directors.count();position ++)
+        if(directors[position] == directorName) {
+            break ;
+        }
+
+    if(position >= 0)
+        removeDirector(position);
+}
+
+QList<QString> movie::getDirectors(void) const {
+    return this->directors;
 }
 
 void movie::addActor(const actor& act) {
@@ -266,19 +314,20 @@ QString movie::getrtid(void) const {
 
 void movie::updateDBInformations(movie *mov) {
 
-    originalName = mov->getOriginalName();
-    posterPath = mov->getPosterPath();
-    year = mov->getYear();
-    synopsis = mov->getSynopsis();
+    originalName = mov->originalName;
+    posterPath = mov->posterPath;
+    year = mov->year;
+    synopsis = mov->synopsis;
+    runtime = mov->runtime;
+    rating = mov->rating;
 
     genres.clear();
+    genres = mov->genres;
 
-    for(int i=0;i<mov->genres.count();i++)
-        genres.push_back(mov->genres[i]);
+    directors.clear();
+    directors = mov->directors;
 
     cast.clear();
-
-    for(int i=0;i<mov->cast.count();i++)
-        cast.push_back(mov->cast[i]);
+    cast = mov->cast;
 }
 

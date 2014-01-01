@@ -5,32 +5,47 @@
 #include <vector>
 #include <stack>
 
-jSonParser::jSonParser(QObject *parent, QString jSonString) :
-    QObject(parent)
+//This is not a properly implemented jSon Parser!!!!!!!!!!!!!!!!!!!!
+//This is a functional jSon Parser that work with a minimum of issues
+//on the Rotten Tomatoes API
+
+//For further documentations about jSon format this link is usefull:
+//                      http://www.json.org/
+
+//This parser have 2 main functions:
+
+//1. SET PARSER
+//The set parser takes a jSon SET text as a QString and return a
+//std::map<QString,QString> associated with every object in that jSon SET
+//2. ARRAY PARSER
+//The array parser takes a jSon ARRAY text as a QString and return a
+//std::vector<QString> associated with every element in that jSon ARRAY
+
+//Unfortunately this implementation implied that the programmer MUST
+//KNOW what type of jSon element is gonna to parse. In other words
+//this is a minimalist jSon parser, but it's enough powerfull for what is need here
+
+jSonParser::jSonParser(QString jSonString)
 {
     this->jSonString = jSonString;
 }
 
-bool jSonParser::jSonValidityChecker(void) {
+bool jSonParser::jSonValidityChecker(void) { //Not working yet
     std::stack<char> Stack;
 
     return true;
 }
 
+//This return the string without starting and ending quotes
 QString jSonParser::trimQuoteMarks(const QString& string) {
 
-    int i,j;
-    QString resString;
+    if(string[0] == '"' && string[string.size()-1] == '"')
+        return string.mid(1,string.size()-2);
 
-    for(i=0;string[i] == '"';i++);
-    for(j=string.size()-1;string[j] == '"';j--);
-
-    for(;i<=j;++i)
-        resString += string[i];
-
-    return resString.trimmed();
+    return string;
 }
 
+//This method get the NAME of the object
 QString jSonParser::getSpecName(void) {
 
     QString name;
@@ -43,22 +58,26 @@ QString jSonParser::getSpecName(void) {
     return trimQuoteMarks(name);
 }
 
+//This method get the ARGUMENT of the object
 QString jSonParser::getArgument(void) {
 
-    QString argument,helper = ",}]\"";
+    //Here it must be a finite automata, but nvm...
+
+    QString argument = "",helper = ",}]\"";
     std::stack<QChar> Stack;
     QChar chaux;
 
     for(;jSonString[pos] != ':';++pos);
 
-    if(jSonString[pos+1] == '"') {
+    if(jSonString[++pos] == '"') {
         Stack.push('"');
+        argument += '"';
         ++ pos;
     }
 
-    for(++pos; ;++pos) {
+    for(; ;++pos) {
 
-        chaux = jSonString.at(pos);
+        chaux = jSonString[pos];
         if(helper.indexOf(chaux) != -1 && Stack.empty()) {
             ++ pos;
 
@@ -70,29 +89,34 @@ QString jSonParser::getArgument(void) {
         else if(chaux == '"')
             Stack.push('"');
 
-        if(chaux == '{' || chaux == '[')
-            Stack.push(chaux);
-        else if(chaux == '}' && Stack.top() == '{')
-            Stack.pop();
-        else if(chaux == ']' && Stack.top() == '[')
-            Stack.pop();
+        if(Stack.empty() == true || Stack.top() != '"') {
+
+            if(chaux == '{' || chaux == '[')
+                Stack.push(chaux);
+            else if(chaux == '}' && Stack.top() == '{')
+                Stack.pop();
+            else if(chaux == ']' && Stack.top() == '[')
+                Stack.pop();
+        }
 
         argument += chaux;
+
+        if(chaux == '\\')
+            argument += jSonString[++pos];
     }
+
+    throw "The jSon file is not properly formated!";
 }
 
-std::map<QString,QString> jSonParser::jSonParsed(void) {
+//This method return the parsed SET
+std::map<QString,QString> jSonParser::jSonSetParsed(void) {
 
     std::map<QString,QString> jSon;
-    QString name,arg;
+    QString name = "",arg = "";
 
     for(pos=1;pos<jSonString.size()-1;) {
-        //qDebug() << "plm" << pos ;
         name = getSpecName();
         arg = getArgument();
-
-        //qDebug() << name;
-        //qDebug() << arg;
 
         jSon[name] = arg;
     }
@@ -100,65 +124,21 @@ std::map<QString,QString> jSonParser::jSonParsed(void) {
     return jSon;
 }
 
-QString jSonParser::getSet(void) {
+//This method return the parsed ARRAY
+std::vector<QString> jSonParser::jSonArrayParsed(void) {
 
-    std::stack<QChar> Stack;
-    QString result;
-
-    for(;jSonString[pos] != '{';++pos);
-    for(; ;++pos) {
-
-        if(jSonString[pos] == '}' && Stack.top() == '{')
-            Stack.pop();
-        else if(jSonString[pos] == '{')
-            Stack.push('{');
-
-        result += jSonString[pos];
-
-        if(Stack.empty()) {
-            ++ pos ;
-
-            return trimQuoteMarks(result);
-        }
-    }
-
-    return "";
-}
-
-std::vector<QString> jSonParser::jSonVectorOfSetsParsed(void) {
     std::vector<QString> jSon;
 
     for(pos=1;pos<jSonString.size()-1;) {
 
-        jSon.push_back(getSet());
+        jSonString[--pos] = ':';
+        jSon.push_back(getArgument());
     }
 
     return jSon;
 }
 
-QString jSonParser::getSetArgument(void) {
-
-    QString result,helper = ",]";
-
-    for(;jSonString[pos] == ',';++pos);
-    for(;helper.indexOf(jSonString[pos]) == -1;++pos) {
-        result += jSonString[pos];
-    }
-
-    return result.trimmed();
-}
-
-std::vector<QString> jSonParser::jSonVectorOfElementsParsed(void) {
-
-    std::vector<QString> jSon;
-
-    for(pos=1;pos < jSonString.size()-1;) {
-        jSon.push_back(getSetArgument());
-    }
-
-    return jSon;
-}
-
+//This method set the jSon text that will be parsed
 void jSonParser::setString(QString jSonString) {
     this->jSonString = jSonString;
 }

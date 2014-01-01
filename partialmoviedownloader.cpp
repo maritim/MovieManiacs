@@ -14,9 +14,9 @@ partialMovieDownloader::partialMovieDownloader(const QString &jSonString)
 
 void partialMovieDownloader::run() {
 
-    jSonParser jSon(this,jSonString);
+    jSonParser jSon(jSonString);
 
-    std::map<QString,QString> jSonResult = jSon.jSonParsed();
+    std::map<QString,QString> jSonResult = jSon.jSonSetParsed();
 
     smplMovie.setName(jSonResult["title"] + " (" + jSonResult["year"] + ")");
     smplMovie.setrtid(jSonResult["id"]);
@@ -26,15 +26,11 @@ void partialMovieDownloader::run() {
     QObject::connect(net, SIGNAL(finished(QImage)),this, SLOT(takeMoviePoster(QImage)));
 
     jSon.setString(jSonResult["posters"]);
-    jSonResult = jSon.jSonParsed();
+    jSonResult = jSon.jSonSetParsed();
 
     smplMovie.setPosterPath(jSonResult["original"]);
 
     net->getInternetImage(jSonResult["detailed"]);
-
-//    movieDownloader *mDownloader = new movieDownloader(this,smplMovie.getrtid());
-
-//    QObject::connect()
 }
 
 void partialMovieDownloader::takeMoviePoster(QImage image)
