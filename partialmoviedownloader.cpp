@@ -1,5 +1,6 @@
-#include "samplemovie.h"
 #include "partialmoviedownloader.h"
+
+#include "samplemovie.h"
 #include "networkclass.h"
 #include "jsonparser.h"
 #include "moviedownloader.h"
@@ -7,8 +8,8 @@
 
 #include<QtCore>
 
-partialMovieDownloader::partialMovieDownloader(const QString &jSonString)
-{
+partialMovieDownloader::partialMovieDownloader(const QString &jSonString) {
+
     this->jSonString = jSonString;
 }
 
@@ -18,7 +19,11 @@ void partialMovieDownloader::run() {
 
     std::map<QString,QString> jSonResult = jSon.jSonSetParsed();
 
-    smplMovie.setName(jSonResult["title"] + " (" + jSonResult["year"] + ")");
+    if(jSonResult["year"].isEmpty() == false)
+        smplMovie.setName(jSonResult["title"] + " (" + jSonResult["year"] + ")");
+    else
+        smplMovie.setName(jSonResult["title"]);
+
     smplMovie.setrtid(jSonResult["id"]);
 
     networkclass *net = new networkclass();
@@ -33,15 +38,15 @@ void partialMovieDownloader::run() {
     net->getInternetImage(jSonResult["detailed"]);
 }
 
-void partialMovieDownloader::takeMoviePoster(QImage image)
-{
+void partialMovieDownloader::takeMoviePoster(QImage image) {
+
     smplMovie.setMoviePoster(image);
 
     emit finished(smplMovie);
     emit finished();
 }
 
-void partialMovieDownloader::takeMovie(movie mov) {
+/*void partialMovieDownloader::takeMovie(movie mov) {
 
     smplMovie.setOriginalName(mov.getOriginalName());
     smplMovie.setYear(mov.getYear());
@@ -51,4 +56,4 @@ void partialMovieDownloader::takeMovie(movie mov) {
     QObject::connect(net, SIGNAL(finished(QImage)), this, SLOT(takeMoviePoster(QImage)));
 
     net->getInternetImage(smplMovie.getPosterPath());
-}
+}*/

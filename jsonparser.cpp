@@ -1,9 +1,10 @@
 #include "jsonparser.h"
 
-#include <QtCore>
 #include <map>
 #include <vector>
 #include <stack>
+
+#include <QtCore>
 
 //This is not a properly implemented jSon Parser!!!!!!!!!!!!!!!!!!!!
 //This is a functional jSon Parser that work with a minimum of issues
@@ -25,8 +26,8 @@
 //KNOW what type of jSon element is gonna to parse. In other words
 //this is a minimalist jSon parser, but it's enough powerfull for what is need here
 
-jSonParser::jSonParser(QString jSonString)
-{
+jSonParser::jSonParser(QString jSonString) {
+
     this->jSonString = jSonString;
 }
 

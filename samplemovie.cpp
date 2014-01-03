@@ -1,11 +1,8 @@
-#include "movie.h"
 #include "samplemovie.h"
-#include "networkclass.h"
 
-#include<QtCore>
+#include <QtCore>
 
-samplemovie::samplemovie(void)
-{
+samplemovie::samplemovie(void) {
 }
 
 /*samplemovie::samplemovie(const samplemovie& smplMovie)

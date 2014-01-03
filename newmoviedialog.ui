@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>420</width>
-    <height>472</height>
+    <height>450</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -53,12 +53,25 @@
          </widget>
         </item>
         <item row="1" column="1">
-         <widget class="QSpinBox" name="spinBox"/>
+         <widget class="QSpinBox" name="ratingSpinBox">
+          <property name="minimum">
+           <number>1</number>
+          </property>
+          <property name="maximum">
+           <number>100</number>
+          </property>
+          <property name="singleStep">
+           <number>10</number>
+          </property>
+          <property name="value">
+           <number>100</number>
+          </property>
+         </widget>
         </item>
         <item row="2" column="0">
          <widget class="QLabel" name="label_4">
           <property name="text">
-           <string>Viewwing Time</string>
+           <string>Viewing Time</string>
           </property>
          </widget>
         </item>
@@ -91,10 +104,20 @@
             </widget>
            </item>
            <item>
-            <widget class="QLineEdit" name="movieIDEdit"/>
+            <widget class="QLineEdit" name="movieIDEdit">
+             <property name="enabled">
+              <bool>false</bool>
+             </property>
+             <property name="readOnly">
+              <bool>true</bool>
+             </property>
+            </widget>
            </item>
            <item>
             <widget class="QToolButton" name="toolButton">
+             <property name="toolTip">
+              <string/>
+             </property>
              <property name="text">
               <string>...</string>
              </property>
@@ -113,7 +136,27 @@
        </property>
        <layout class="QVBoxLayout" name="verticalLayout_3">
         <item>
-         <widget class="QPlainTextEdit" name="reviewPlainTextEdit"/>
+         <widget class="QPlainTextEdit" name="reviewPlainTextEdit">
+          <property name="plainText">
+           <string>Paragraph 1
+You will need to include the following: name of the film, prominent stars of the film, basic setting ( time and place), and type of film ( comedy, adventure, drama, etc.)
+
+Paragraph 2
+You will need to write a plot summary for the movie. Do not reveal the ending. Discuss at least 5 events and be sure to cover the entire scope of the movie, except the very end.
+
+Paragraph 3
+Discuss one aspect of filmmaking. You may choose from acting, direction, editing, costume design, set design, photography, background music, or anything else you may think of. Be sure that you are specific and cite examples from the movie.
+
+Paragraph 4
+Discuss another aspect of filmmaking. You may choose from acting, direction, editing, costume design, set design, photography, background music, or anything else you may think of, but obviously choose something different from what you discussed in the previous paragraph. Be sure that you are specific and cite examples from the movie.
+
+Paragraph 5
+Give your overall reaction to the film as well as your opinion on the quality of the film. Also include your recommendations for potential viewers.
+
+Remember, the guideline above is just what it is. It’s just a guideline, so throw in your own spin and develop your own format if you want to
+.</string>
+          </property>
+         </widget>
         </item>
        </layout>
       </widget>

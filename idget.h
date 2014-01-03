@@ -1,9 +1,10 @@
 #ifndef IDGET_H
 #define IDGET_H
 
-#include <QDialog>
 #include "networkclass.h"
 #include "samplemovie.h"
+
+#include <QDialog>
 
 namespace Ui {
 class IDGet;
@@ -15,7 +16,6 @@ class IDGet : public QDialog
 
     networkclass *net;
     QString urlString;
-    QList<samplemovie> smplMovieList;
 
 private:
     void updateList(QString);
@@ -31,8 +31,7 @@ private slots:
     void fillMoviesList(QString);
     void addMovieToListWidget(samplemovie);
     void on_pushButton_clicked();
-
-    void on_buttonBox_accepted();
+    void on_okButton_clicked();
 
 public:
     QString getMovieID();

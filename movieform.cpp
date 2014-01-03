@@ -72,7 +72,10 @@ void movieform::getReady(void)
 
     ui->reviewTextBrowser->setText(mov.getUserReview());
 
-    ui->synopsisTextBrowser->setText(mov.getSynopsis());
+    if(mov.getSynopsis().isEmpty() == false)
+        ui->synopsisTextBrowser->setText(mov.getSynopsis());
+    else
+        ui->synopsisGroupBox->setVisible(false);
 
     loadCastTableWidget(mov);
 }

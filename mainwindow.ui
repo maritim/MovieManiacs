@@ -159,7 +159,7 @@
      <normaloff>:/images/film_edit.png</normaloff>:/images/film_edit.png</iconset>
    </property>
    <property name="text">
-    <string>Edit Movie</string>
+    <string>&amp;Edit Movie</string>
    </property>
    <property name="toolTip">
     <string>Edit Movie</string>

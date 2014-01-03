@@ -18,7 +18,8 @@ class NewMovieDialog : public QDialog
 public:
     explicit NewMovieDialog(QWidget *parent = 0);
     ~NewMovieDialog();
-    movie getMovie(void);
+    void setMovie(const movie&);
+    movie getMovie(void) const;
 
 private slots:
     void on_buttonBox_accepted();

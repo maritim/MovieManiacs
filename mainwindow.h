@@ -44,6 +44,8 @@ private slots:
     void updateMovie(movie*);
     void progressUpdate(QString progressInformations);
 
+    void on_actionEdit_Movie_triggered();
+
 private:
     Ui::MainWindow *ui;
 };

@@ -6,6 +6,9 @@
 #ifndef MOVIE_H
 #define MOVIE_H
 
+#define DEFAULT_POSTER_FOLDER "images/"
+#define DEFAULT_POSTER_TYPE ".jpg"
+
 class movie
 {
 protected:

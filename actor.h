@@ -11,7 +11,7 @@ protected:
     QString name,role;
 
 public:
-    explicit actor(QObject *parent = 0);
+    explicit actor();
 
     actor(const QString&,const QString&);
     actor(const actor&);

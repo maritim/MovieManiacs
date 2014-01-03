@@ -1,5 +1,6 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
+\
 #include "simpledialog.h"
 #include "diskwriter.h"
 #include "movieform.h"
@@ -12,6 +13,9 @@
 #include <QMessageBox>
 #include <QFileDialog>
 #include <QProgressBar>
+
+#define FILEOPEN_XML_TYPE "XML files (*.xml)"
+#define NEW_COLLECTION "New Collection.xml"
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
@@ -32,8 +36,8 @@ MainWindow::MainWindow(QWidget *parent) :
     }
 }
 
-MainWindow::~MainWindow()
-{
+MainWindow::~MainWindow() {
+
     delete ui;
 }
 
@@ -41,8 +45,8 @@ void MainWindow::on_actionNew_Window_triggered()
 {
     NewMovieDialog dialog(this);
 
-    if(dialog.exec())
-    {
+    if(dialog.exec()) {
+
         movie mov = dialog.getMovie();
         movieList.push_back(mov);
         addMovieToListWidget(mov);
@@ -59,43 +63,31 @@ void MainWindow::loadMovieList(QString filename)
 
     //qDebug() << file.fileName();
 
-    if(!file.open(QIODevice::ReadOnly | QIODevice::Text))
-    {
-        QMessageBox::information(this,"Error","Could not load " + filename);
+    if(!file.open(QIODevice::ReadOnly | QIODevice::Text)) {
+
+        MessageBox::ErrorMessageBox("Error","Could not load \"" + filename + "\"");
         return ;
     }
-    else
-    {
-        if(!document.setContent(&file))
-        {
-            //QPixmap pixmap();
-            //pixmap.load(":/images/film_error.png");
+    else {
 
-            MessageBox::ErrorMessageBox("Error","Could not load \"" + filename + "\" !");
-/*            QMessageBox *box = new QMessageBox();
-            box->setIconPixmap(QPixmap(":/images/film_error.png"));
-            box->setWindowTitle("Error");
-            box->setText();
-            box->setStandardButtons(QMessageBox::Ok);
-            box->setDefaultButton(QMessageBox::Ok);
-            box->setModal(true);
-            box->show();
-*/
-            //QMessageBox::information(this,"Error","Could not load the xml!");
+        if(!document.setContent(&file)) {
+
+            MessageBox::ErrorMessageBox("Error","Could not parse \"" + filename + "\" as XML");
             return ;
         }
+
         file.close();
     }
 
     QDomElement root = document.firstChildElement();
 
     QDomNodeList movies = root.elementsByTagName("movie");
-    for(int i=0;i<movies.count();i++)
-    {
+    for(int i=0;i<movies.count();i++) {
+
         QDomNode movienode = movies.at(i);
 
-        if(movienode.isElement())
-        {
+        if(movienode.isElement()) {
+
             movie mov(movienode.toElement());
 
             movieList.push_back(mov);
@@ -108,33 +100,13 @@ void MainWindow::loadMovieListWidget(const QList<movie>& movieList)
     ui->movieListWidget->clear();
     ui->movieListWidget->setIconSize(QSize(50,40));
 
-    for(int i=0;i<movieList.count();i++)
-    {
-        //QTableWidgetItem *widget = new QTableWidgetItem(movieList[i].getName());
-        //ui->tableWidget->insertRow(i);
-        //ui->tableWidget->setItem(i,1,widget);
-        //ui->tableWidget->setItem(i,0,new QTableWidgetItem(QIcon("1373337397_movie_add.png"),""));
-        //ui->tableWidget->setItem(i,1,new QTableWidgetItem(movieList[i].getXMLPath()));
-//        QmovieListWidgetItem *item = new QmovieListWidgetItem(movieList[i].getName());
-//        item->setSizeHint(QSize(200,64));
-      //  QImage *image = new QImage("thegodfather.jpg");
-//        QIcon icon(QPixmap(movieList[i].getPosterPath()));
-        //if(icon->isNull())
-        //    QMessageBox::information(this,"pl","pl");
-        //QFile
-//        item->setIcon(icon);
-
-//        ui->movieListWidget->addItem(item);
-        //QSize size = new QSize(100,100);
-        //QIcon *icon = new QIcon("thegodfather.jpg");
-        //ui->movieListWidget->item(i)->setIcon(QIcon("thegodfather.jpg"));
-
+    for(int i=0;i<movieList.count();i++) {
         addMovieToListWidget(movieList[i]);
     }
 }
 
-void MainWindow::addMovieToListWidget(const movie& mov)
-{
+void MainWindow::addMovieToListWidget(const movie& mov) {
+
     QListWidgetItem *item = new QListWidgetItem(mov.getName());
     item->setSizeHint(QSize(200,64));
     QIcon icon(QPixmap(mov.getPosterPath()));
@@ -143,8 +115,8 @@ void MainWindow::addMovieToListWidget(const movie& mov)
     ui->movieListWidget->addItem(item);
 }
 
-int MainWindow::getIndexByName(const QString& movieName)
-{
+int MainWindow::getIndexByName(const QString& movieName) {
+
     for(int i=0;i<movieList.size();i++)
         if(movieList[i].getName() == movieName)
             return i;
@@ -152,8 +124,8 @@ int MainWindow::getIndexByName(const QString& movieName)
     throw "Don't find any movie with name " + movieName + " !";
 }
 
-movie MainWindow::getMovieByName(const QString& movieName)
-{
+movie MainWindow::getMovieByName(const QString& movieName) {
+
     foreach(movie mov,movieList)
         if(mov.getName() == movieName)
             return mov;
@@ -161,8 +133,8 @@ movie MainWindow::getMovieByName(const QString& movieName)
     throw "Don't find any movie with name " + movieName + " !";
 }
 
-void MainWindow::on_movieListWidget_itemDoubleClicked(QListWidgetItem *item)
-{
+void MainWindow::on_movieListWidget_itemDoubleClicked(QListWidgetItem *item) {
+
     movieform *movForm = new movieform(this);
 
     movForm->setMovie(getMovieByName(item->text()));
@@ -170,44 +142,41 @@ void MainWindow::on_movieListWidget_itemDoubleClicked(QListWidgetItem *item)
     movForm->show();
 }
 
-void MainWindow::on_actionToolbar_changed()
-{
+void MainWindow::on_actionToolbar_changed() {
+
     if(ui->actionToolbar->isChecked())
         ui->mainToolBar->setVisible(true);
     else
         ui->mainToolBar->setVisible(false);
 }
 
-void MainWindow::on_actionThumbnails_changed()
-{
-    if(ui->actionThumbnails->isChecked())
-    {
+void MainWindow::on_actionThumbnails_changed() {
+
+    if(ui->actionThumbnails->isChecked()) {
         ui->movieListWidget->setIconSize(QSize(50,40));
     }
-    else
-    {
+    else {
         ui->movieListWidget->setIconSize(QSize(0,0));
     }
 }
 
-void MainWindow::on_actionExit_triggered()
-{
+void MainWindow::on_actionExit_triggered() {
+
     this->close();
 }
 
-void MainWindow::on_actionSave_Collection_triggered()
-{
+void MainWindow::on_actionSave_Collection_triggered() {
+
     diskwriter::XMLCollectionWriter(collectionFile,movieList);
 }
 
-void MainWindow::on_actionDelete_Movie_triggered()
-{
+void MainWindow::on_actionDelete_Movie_triggered() {
+
     for(int i=0;i<ui->movieListWidget->count();i++)
-        if(ui->movieListWidget->item(i)->isSelected())
-        {
+        if(ui->movieListWidget->item(i)->isSelected()) {
+
             for(int j=0;j<movieList.count();j++)
-                if(ui->movieListWidget->item(i)->text() == movieList[j].getName())
-                {
+                if(ui->movieListWidget->item(i)->text() == movieList[j].getName()) {
                     movieList.removeAt(j);
                     break ;
                 }
@@ -216,23 +185,23 @@ void MainWindow::on_actionDelete_Movie_triggered()
         }
 }
 
-void MainWindow::on_actionOpen_Collection_triggered()
-{
+void MainWindow::on_actionOpen_Collection_triggered() {
+
     QFileDialog dialog;
     dialog.setFileMode(QFileDialog::ExistingFile);
-    dialog.setNameFilter(tr("XML files (*.xml)"));
+    dialog.setNameFilter("XML files (*.xml)");
 
-    if(dialog.exec())
-    {
+    if(dialog.exec()) {
+
         collectionFile = dialog.selectedFiles()[0];
         loadMovieList(collectionFile);
         loadMovieListWidget(movieList);
     }
 }
 
-void MainWindow::on_actionNew_Collection_triggered()
-{
-    QString fileName = QFileDialog::getSaveFileName(this,tr("New collection"),"New Collection.xml",tr("XML files(*.xml)"));
+void MainWindow::on_actionNew_Collection_triggered() {
+
+    QString fileName = QFileDialog::getSaveFileName(this,"New collection",NEW_COLLECTION,FILEOPEN_XML_TYPE);
     if(fileName != NULL) {
         movieList.clear();
         loadMovieListWidget(movieList);
@@ -241,9 +210,9 @@ void MainWindow::on_actionNew_Collection_triggered()
     }
 }
 
-void MainWindow::on_actionSave_As_triggered()
-{
-    QString fileName = QFileDialog::getSaveFileName(this,tr("Save file as"),"New Collection.xml",tr("XML files (*.xml)"));
+void MainWindow::on_actionSave_As_triggered() {
+
+    QString fileName = QFileDialog::getSaveFileName(this,"Save file as",NEW_COLLECTION,FILEOPEN_XML_TYPE);
 
     if(fileName != NULL) {
         collectionFile = fileName;
@@ -251,8 +220,8 @@ void MainWindow::on_actionSave_As_triggered()
     }
 }
 
-void MainWindow::on_actionUpdate_Movie_triggered()
-{
+void MainWindow::on_actionUpdate_Movie_triggered() {
+
     //QProgressBar *progressBar = new QProgressBar(ui->statusBar);
     //progressBar->setMaximumSize(170,19);
     //ui->statusBar->addWidget(progressBar);
@@ -265,7 +234,7 @@ void MainWindow::on_actionUpdate_Movie_triggered()
 
         if(getMovieByName(selectedMovieName).getrtid().size() == 0) {
 
-            QMessageBox::information(this,"Error","Could not update " + selectedMovieName + " without specific ID");
+            MessageBox::ErrorMessageBox("Error", "Could not update " + selectedMovieName + " without a specific ID");
 
             return ;
         }
@@ -287,8 +256,8 @@ void MainWindow::on_actionUpdate_Movie_triggered()
     }
 }
 
-void MainWindow::updateMovie(movie* mov)
-{
+void MainWindow::updateMovie(movie* mov) {
+
     ui->statusBar->clearMessage();
     ui->statusBar->showMessage("Finished update: " + mov->getOriginalName());
 
@@ -303,9 +272,50 @@ void MainWindow::updateMovie(movie* mov)
         }
 }
 
-void MainWindow::progressUpdate(QString progressInformations)
-{
+void MainWindow::progressUpdate(QString progressInformations) {
+
     ui->statusBar->clearMessage();
     ui->statusBar->showMessage("Progress: " + progressInformations);
 }
 
+
+void MainWindow::on_actionEdit_Movie_triggered() {
+
+    QString selectedMovieName = ui->movieListWidget->selectedItems().at(0)->text();
+    int selectedIndex = getIndexByName(selectedMovieName);
+
+    NewMovieDialog dialog(this);
+
+    dialog.setMovie(movieList[selectedIndex]);
+
+    if(dialog.exec()) {
+
+        movie editedMovie = dialog.getMovie();
+
+        //Some garbage collection if the movie ID is modifier, in
+        //conclusion the movie poster is changed too
+
+        //This part give some bugs, but for the moment this is the
+        //best idea for the feature. It will be change in the future
+
+        if(movieList[selectedIndex].getrtid() != editedMovie.getrtid()) {
+
+            QString lastMoveID = movieList[selectedIndex].getrtid();
+
+            if(QFile::exists(DEFAULT_POSTER_FOLDER + lastMoveID + DEFAULT_POSTER_TYPE) == true)
+                QFile::remove(DEFAULT_POSTER_FOLDER + lastMoveID + DEFAULT_POSTER_TYPE);
+        }
+
+        if(movieList[selectedIndex].getName() != editedMovie.getName()) {
+
+            for(int i=0;i<ui->movieListWidget->count();i++)
+                if(ui->movieListWidget->item(i)->text() == selectedMovieName) {
+
+                    ui->movieListWidget->item(i)->setText(dialog.getMovie().getName());
+                    break ;
+                }
+        }
+
+        movieList[selectedIndex] = editedMovie;
+    }
+}

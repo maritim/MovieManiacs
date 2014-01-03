@@ -1,9 +1,10 @@
 #ifndef JSONPARSER_H
 #define JSONPARSER_H
 
-#include <QObject>
 #include <map>
 #include <vector>
+
+#include <QObject>
 
 class jSonParser : public QObject
 {

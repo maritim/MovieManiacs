@@ -1,5 +1,6 @@
-#include "movie.h"
 #include "diskwriter.h"
+
+#include "movie.h"
 
 #include <QtCore>
 
@@ -7,9 +8,7 @@
 //There is no need for an actual instance to write a movie
 //in a XML file
 
-diskwriter::diskwriter(QObject *parent) :
-    QObject(parent)
-{
+diskwriter::diskwriter() {
 }
 
 ///////////////////////////////////////////////////////////////////////////
@@ -23,8 +22,8 @@ diskwriter::diskwriter(QObject *parent) :
 //information that are redundtant to be written by different
 //pieces of code
 
-void diskwriter::XMLCollectionWriter(QString fileName, const QList<movie>& movies)
-{
+void diskwriter::XMLCollectionWriter(QString fileName, const QList<movie>& movies) {
+
     //This save almost every information about movie in "filename" file
     //as a XML file type
 
@@ -42,8 +41,8 @@ void diskwriter::XMLCollectionWriter(QString fileName, const QList<movie>& movie
     fileStream << "<?xml version=\"1.0\" encoding=\"ISO-8859-1\"?>\n";
     fileStream << "<movies>\n";
 
-    for(int i=0;i<movies.count();i++)
-    {
+    for(int i=0;i<movies.count();i++) {
+
         fileStream << "\t<movie name=\"" + movies[i].getName() + "\">\n";
         XMLUserInfosWriter(fileStream,movies[i]);
         //If the movie was updated from database
@@ -57,8 +56,8 @@ void diskwriter::XMLCollectionWriter(QString fileName, const QList<movie>& movie
 }
 
 //Informations inputed from the user are written from here...
-void diskwriter::XMLUserInfosWriter(QTextStream& fileStream, const movie& mov)
-{
+void diskwriter::XMLUserInfosWriter(QTextStream& fileStream, const movie& mov) {
+
     fileStream << "\t\t<user_infos>\n";
     fileStream << "\t\t\t<user_rating>" + mov.getUserRating() + "</user_rating>\n";
     fileStream << "\t\t\t<date day=\"" + QString::number(mov.getUserDate().date().day()) +
@@ -69,8 +68,8 @@ void diskwriter::XMLUserInfosWriter(QTextStream& fileStream, const movie& mov)
 }
 
 //Informations from the Rotten Tomatoes (if exists) are written from here...
-void diskwriter::XMLRealInfosWriter(QTextStream& fileStream, const movie& mov)
-{
+void diskwriter::XMLRealInfosWriter(QTextStream& fileStream, const movie& mov) {
+
     fileStream << "\t\t<real_infos>\n";
 
     fileStream << "\t\t\t<name>" + mov.getOriginalName() + "</name>\n";
@@ -89,8 +88,8 @@ void diskwriter::XMLRealInfosWriter(QTextStream& fileStream, const movie& mov)
 }
 
 //Informations about movie Cast are written from here...
-void diskwriter::XMLCastWriter(QTextStream& fileStream, const movie& mov)
-{
+void diskwriter::XMLCastWriter(QTextStream& fileStream, const movie& mov) {
+
     fileStream << "\t\t\t<cast>\n";
     for(int i=0;i<mov.actorCount();i++)
         fileStream << "\t\t\t\t<actor name=\"" + mov.actorAt(i).getName() + "\">" + mov.actorAt(i).getRole() + "</actor>\n";
@@ -101,8 +100,8 @@ void diskwriter::XMLCastWriter(QTextStream& fileStream, const movie& mov)
 //It could be used for sets that contains only Strings
 //It need setName ("genres") and setElementsName ("genre") and
 //QList<QString> (the set for the output)
-void diskwriter::XMLSetWriter(QTextStream& fileStream, QString setName, QString setElementsName, const QList<QString>& set)
-{
+void diskwriter::XMLSetWriter(QTextStream& fileStream, QString setName, QString setElementsName, const QList<QString>& set) {
+
     fileStream << "\t\t\t<" + setName + ">\n";
     foreach(QString element,set) {
         fileStream << "\t\t\t\t<" + setElementsName + ">";
@@ -116,7 +115,6 @@ void diskwriter::XMLSetWriter(QTextStream& fileStream, QString setName, QString 
 //3 invalid characters: "&", "<", ">". First of them will
 //appear quite often in "genres" so it need to be converted
 //in "&amp;". This method do this
-QString diskwriter::validateText(QString string)
-{
+QString diskwriter::validateText(QString string) {
     return string.replace("&","&amp;");
 }

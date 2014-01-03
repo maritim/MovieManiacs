@@ -15,7 +15,7 @@ class MessageBox : public QObject
     
 public:
     static void ErrorMessageBox(const QString&, const QString&);
-    ~MessageBox();
+    static int QuestionMessageBox(const QString&, const QString&);
 };
 
 #endif // MESSAGEBOX_H

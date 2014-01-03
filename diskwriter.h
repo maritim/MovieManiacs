@@ -14,7 +14,7 @@ private:
     static QString validateText(QString);
 
 public:
-    explicit diskwriter(QObject *parent = 0);
+    explicit diskwriter();
     
     static void XMLCollectionWriter(QString,const QList<movie>&);
     static void XMLUserInfosWriter(QTextStream&,const movie&);

@@ -1,4 +1,5 @@
 #include "moviedownloader.h"
+
 #include "networkclass.h"
 #include "jsonparser.h"
 #include "actor.h"
@@ -8,13 +9,13 @@
 #include <QImageWriter>
 
 movieDownloader::movieDownloader(QObject *parent, QString ID) :
-    QObject(parent)
-{
+    QObject(parent) {
+
     this->ID = ID;
 }
 
-movieDownloader::movieDownloader(const QString& ID)
-{
+movieDownloader::movieDownloader(const QString& ID) {
+
     //Constructor take and set the movie ID
 
     this->ID = ID;
@@ -46,9 +47,10 @@ void movieDownloader::getMovie(QString jSonString) {
     QString posterUrl = "";
     int movieScore = 0;
 
-    emit progress("Downloaing completed...");
+    emit progress("Downloading completed...");
 
     try {
+
         jSonParser jSon(jSonString);
 
         std::map<QString,QString> jSonResult = jSon.jSonSetParsed();
@@ -75,9 +77,9 @@ void movieDownloader::getMovie(QString jSonString) {
 
         jSon.setString(jSonResult["genres"]);
 
-        std::vector<QString> jSonVectorResult = jSon.jSonArrayParsed();//jSon.jSonVectorOfElementsParsed();
+        std::vector<QString> jSonVectorResult = jSon.jSonArrayParsed();
 
-        for(int i=0;i<jSonVectorResult.size();i++) {
+        for(unsigned int i=0;i<jSonVectorResult.size();i++) {
             mov->addGenre(jSonVectorResult[i]);
         }
 
@@ -89,9 +91,9 @@ void movieDownloader::getMovie(QString jSonString) {
         std::map<QString,QString> jSonDirectorResult;
 
         jSon.setString(jSonResult["abridged_directors"]);
-        jSonVectorResult = jSon.jSonArrayParsed();//jSon.jSonVectorOfSetsParsed();
+        jSonVectorResult = jSon.jSonArrayParsed();
 
-        for(int i=0;i<jSonVectorResult.size();i++) {
+        for(unsigned int i=0;i<jSonVectorResult.size();i++) {
 
             jSon.setString(jSonVectorResult[i]);
             jSonDirectorResult = jSon.jSonSetParsed();
@@ -103,11 +105,11 @@ void movieDownloader::getMovie(QString jSonString) {
 
         jSon.setString(jSonResult["abridged_cast"]);
 
-        jSonVectorResult = jSon.jSonArrayParsed();//jSon.jSonVectorOfSetsParsed();
+        jSonVectorResult = jSon.jSonArrayParsed();
         actor actr;
         std::vector<QString> jSonVectorRoleResult;
 
-        for(int i=0;i<jSonVectorResult.size();i++) {
+        for(unsigned int i=0;i<jSonVectorResult.size();i++) {
 
             jSon.setString(jSonVectorResult[i]);
 
@@ -115,10 +117,17 @@ void movieDownloader::getMovie(QString jSonString) {
 
             actr.setName(jSonResult["name"]);
 
-            jSon.setString(jSonResult["characters"]);
-            jSonVectorRoleResult = jSon.jSonArrayParsed();//jSon.jSonVectorOfElementsParsed();
+            //The characters (role) section from cast could be missed
+            //If so, no role is associated for the actor
 
-            actr.setRole(jSonVectorRoleResult[0]);
+            if(jSonResult["characters"] != NULL) {
+
+                jSon.setString(jSonResult["characters"]);
+                jSonVectorRoleResult = jSon.jSonArrayParsed();
+
+                actr.setRole(jSonVectorRoleResult[0]);
+            }
+
             mov->addActor(actr);
         }
 
@@ -142,8 +151,8 @@ void movieDownloader::getMovie(QString jSonString) {
 }
 
 
-void movieDownloader::getPoster(QImage image)
-{
+void movieDownloader::getPoster(QImage image) {
+
     //Movie poster is in the "image"
     //The poster path is "image/" + ID + .jpg extension
     //The image will be saved at this path
@@ -151,7 +160,7 @@ void movieDownloader::getPoster(QImage image)
 
     emit progress("Downloading poster completed...");
 
-    mov->setPosterPath("images/" + ID + ".jpg");
+    mov->setPosterPath(DEFAULT_POSTER_FOLDER + ID + DEFAULT_POSTER_TYPE);
 
     QImageWriter writer(mov->getPosterPath());
     if(!writer.write(image)) {

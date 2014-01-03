@@ -1,7 +1,6 @@
 #include "actor.h"
 
-actor::actor(QObject *parent) :
-    QObject(parent)
+actor::actor()
 {
     name = role = "";
 }
